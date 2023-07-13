@@ -14,7 +14,7 @@ const styles = StyleSheet.create({
     borderColor: "#888",
   },
   operationButotn: {
-    color: "fff",
+    color: "#fff",
     backgroundColor: "#fa8231",
   },
   buttonDouble: {

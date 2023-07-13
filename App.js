@@ -27,7 +27,7 @@ const dataOperators = ["/", "*", "-", "+", "="];
 
 export default function App() {
   const initialState = {
-    displayValue: 0,
+    displayValue: "0",
     clearDisplay: false,
     operation: null,
     values: [0, 0],
@@ -47,19 +47,66 @@ export default function App() {
 
     const displayValue = currentValue + n;
 
-    setState({ displayValue, clearDisplay: false });
+    const finalState = {
+      displayValue: displayValue,
+      clearDisplay: false,
+      operation: state.operation,
+      values: state.values,
+      current: state.current,
+    };
+
+    setState({ ...finalState });
 
     if (n !== ".") {
       const newValue = parseFloat(displayValue);
       const values = [...state.values];
       values[state.current] = newValue;
-      setState({ values });
+
+      const finalState = {
+        displayValue: displayValue,
+        clearDisplay: false,
+        operation: state.operation,
+        values,
+        current: state.current,
+      };
+
+      setState({ ...finalState });
     }
   };
 
   const clearMemory = () => setState({ ...initialState });
 
-  const setOperation = (operation) => false;
+  const setOperation = (operation) => {
+    const values = [...state.values];
+    const equals = operation === "=";
+    if (state.current === 0) {
+      const newState = {
+        displayValue: state.displayValue,
+        clearDisplay: true,
+        operation,
+        values: state.values,
+        current: 1,
+      };
+
+      setState({ ...newState });
+    } else {
+      try {
+        values[0] = eval(`${values[0]} ${state.operation} ${values[1]}`);
+      } catch (error) {
+        values[0] = state.values[0];
+      }
+
+      values[1] = 0;
+
+      setState({
+        displayValue: values[0],
+        clearDisplay: !equals,
+        operation: equals ? null : operation,
+        values,
+        current: equals ? 0 : 1,
+      });
+    }
+  };
 
   return (
     <SafeAreaView style={styles.container}>
