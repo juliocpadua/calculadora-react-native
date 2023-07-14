@@ -37,11 +37,11 @@ export default function App() {
   const [state, setState] = useState({ ...initialState });
 
   const addDigit = (n) => {
-    if (n === "." && state.displayValue.includes(".")) {
+    const clearDisplay = state.displayValue === "0" || state.clearDisplay;
+
+    if (n === "." && !clearDisplay && state.displayValue.includes(".")) {
       return;
     }
-
-    const clearDisplay = state.displayValue === "0" || state.clearDisplay;
 
     const currentValue = clearDisplay ? "" : state.displayValue;
 
@@ -99,7 +99,7 @@ export default function App() {
       values[1] = 0;
 
       setState({
-        displayValue: values[0],
+        displayValue: `${values[0]}`,
         clearDisplay: !equals,
         operation: equals ? null : operation,
         values,
